@@ -1,11 +1,9 @@
-% moirphism.sty
-
 \usepackage{tikz}
 \usetikzlibrary{calc}
 \usepackage{xparse}
 \usepackage{xifthen}
 
-\tikzset{ 
+\tikzset{
     wire/.style={rounded corners=3, line width=.5pt}
 	, iden/.style={line width=.5pt}
 	, dot/.style={draw,fill=black, circle, inner sep=1pt}
@@ -18,46 +16,12 @@
 }
 
 
-\def\SW{(-0.5,-0.5)}
-\def\NW{(-0.5,+0.5)}
-\def\NE{(+0.5,-0.5)}
-\def\SE{(+0.5,+0.5)}
-
-\def\L{(-0.5,0)}
-\def\R{(+0.5,0)}
-\def\T{(0,+0.5)}
-\def\B{(0,-0.5)}
-
-\def\LU{(-0.5,+0.25)}
-\def\LD{(-0.5,-0.25)}
-
-\def\RU{(+0.5,+0.25)}
-\def\RD{(+0.5,-0.25)}
-
-\def\TL{(-0.25,+0.5)}
-\def\TR{(+0.25,+0.5)}
-
-\def\BL{(-0.25,-0.5)}
-\def\BR{(+0.25,-0.5)}
-
-\def\CL{(-0.25,0)}
-\def\CR{(+0.25,0)}
-\def\CU{(0,+0.25)}
-\def\CD{(0,-0.25)}
-
-\def\CNW{(-0.25,+0.25)}
-\def\CNE{(+0.25,+0.25)}
-\def\CSE{(+0.25,-0.25)}
-\def\CSW{(-0.25,-0.25)}
-
-\def\C{(0,0)}
-
 \newcounter{moirphismi}
 \newcounter{moirphismj}
 
 \RenewDocumentCommand{\>}{}{%
-    \stepcounter{moirphismi}%
-    \setcounter{moirphismj}{0}%
+    \stepcounter{moirphismj}%
+    \setcounter{moirphismi}{0}%
 }
 
 % @height
@@ -76,7 +40,7 @@
         yscale={max(#2,2*#2-2)}]
         #1
     \end{scope}
-    \addtocounter{moirphismj}{1}
+    \addtocounter{moirphismi}{1}
 }
 \NewDocumentCommand{\moirphism}{m}{
    \setcounter{moirphismi}{0}
@@ -94,33 +58,46 @@
 % The wire.
 \RenewDocumentCommand{\~}{}{
     \wrapmoirphism{
-        \draw[wire] \L -- \R;
+        \draw[wire] (-0.5,0) -- (+0.5,0);
     }
 }
+
 \NewDocumentCommand{\mor}{O{}O{}}{
     \wrapmoirphism{
-        \draw[wire] \L -- \R;
-        \draw[fill=#2] \CSW rectangle \CNE;
-        \node[] at \C {$#1$};    
+        \draw[wire] (-0.5,0) -- (+0.5,0);
+        \draw[fill=#2] (-0.25,-0.25) rectangle (+0.25,+0.25);
+        \node[] at (0,0) {$#1$};
     }
 }
 \NewDocumentCommand{\mul}{m}{
     \wrapmoirphism{
-        \draw[wire] \C -- \R;
-        \draw[wire] \LU -| \CD -- \LD;
-        \node[cdot=#1] at \C {};
-    }
+        \draw[wire] (-0.5,+0.25) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.25];
+        \draw[wire] (0,0) -- (+0.5,0);
+        \node[cdot=#1] at (0,0) {};
+    }[2]
 }
 \NewDocumentCommand{\comul}{m}{
     \wrapmoirphism{
-        \draw[wire] \RU -| \CD -- \RD;
-        \draw[wire] \L -- \C;
-        \node[cdot=#1] at \C {};
-    }
+        \draw[wire] (-0.5,0) -- (0,0);
+        \draw[wire] (+0.5,+0.25) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.25];
+        \node[cdot=#1] at (0,0) {};
+    }[2]
 }
+
 \NewDocumentCommand{\swap}{}{
     \wrapmoirphism{
-	    \draw[wire] \LU -- \CNW -- \CSE -- \RD;
-	    \draw[wire] \LD -- \CSW -- \CNE -- \RU;
+	    \draw[wire] (-0.5,+0.25) -- (-0.25,+0.25) -- (+0.25,-0.25) -- (+0.5,-0.25);
+	    \draw[wire] (-0.5,-0.25) -- (-0.25,-0.25) -- (+0.25,+0.25) -- (+0.5,+0.25);
     }
+}
+
+\NewDocumentCommand{\ccap}{}{
+    \wrapmoirphism{
+        \draw[wire] (-0.5,+0.25) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.25];
+    }[2]
+}
+\NewDocumentCommand{\ccup}{}{
+    \wrapmoirphism{
+        \draw[wire] (+0.5,+0.25) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.25];
+    }[2]
 }
