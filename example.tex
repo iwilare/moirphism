@@ -3,72 +3,43 @@
 \usepackage{moirphism}
 
 \def\f{\mor[f][red]}
+\def\g{\mor[g][red]}
 \def\c{\comul{black}}
 \def\m{\mul{black}}
 
 \begin{document}
 
-\begin{tikzpicture}
+% \begin{tikzpicture}
 
-% Draw a grid
-\draw[xshift=0.5,step=0.25,gray!10,ultra thin]
-    (0,0) grid (13,-11);
-\draw[xshift=0.5,step=0.5,gray!30,ultra thin]
-    (0,0) grid (13,-11);
-\draw[xshift=0.5,step=1,gray!70,ultra thin]
-    (0,0) grid (13,-11);
-\draw[xshift=0.5,step=0.25,red!10,ultra thin]
-    (0,0) grid (13,11);
-\draw[xshift=0.5,step=0.5,red!30,ultra thin]
-    (0,0) grid (13,11);
-\draw[xshift=0.5,step=1,red!70,ultra thin]
-    (0,0) grid (13,11);
+% \tikzset{
+%     wire/.style={rounded corners=3, line width=0.75pt}
+% 	, iden/.style={line width=1pt} }
 
-% Autostep
-\moirphism{
-\comul{black}[1] 
-\comul{black}[2]  
-\comul{black}[3] 
-\comul{black}[4] 
-\comul{black}[5] 
-\comul{black}[6] 
-\comul{black}[7] 
-\comul{black}[8] \>
-\>
-\>
-\>
-\>
-\>
-\>
-\f   \_       \_ \f \_        \_ \~    \_       \_    \_      \_     \_ \>
-\f   \_ \c[3] \_ \f \_  \c<2> \_       \_ \m<2> \_    \_  \f  \_     \_ \>
-\~   \_       \_ \f \_        \_ \~<4> \_       \_    \_      \_ \f  \_ \>
+% % Draw a grid
+% \draw[xshift=0.5,step=0.25,gray!10,ultra thin]
+%     (0,0) grid (13,-11);
+% \draw[xshift=0.5,step=0.5,gray!30,ultra thin]
+%     (0,0) grid (13,-11);
+% \draw[xshift=0.5,step=1,gray!70,ultra thin]
+%     (0,0) grid (13,-11);
+
+% \moirphism{
+%   \f \> \comul{black} \> \f \g \> \ccap %\> \comul{black} \f
+% }
+
+\fbox{
+    \begin{tikzpicture}
+    \moirphism{
+        \f \> \comul{black} \> \f \g \> \ccapp
+    }
+    \end{tikzpicture}
 }
-\end{tikzpicture}
-\newpage
-% Draw a grid
-\def\moirphismscale{0.5cm}
-\begin{tikzpicture}[x=0.5cm,y=0.5cm]
-\draw[xshift=0.5,step=0.25,gray!10,ultra thin]
-    (0,0) grid (13,-11);
-\draw[xshift=0.5,step=0.5,gray!30,ultra thin]
-    (0,0) grid (13,-11);
-\draw[xshift=0.5,step=1,gray!70,ultra thin]
-    (0,0) grid (13,-11);
-\draw[xshift=0.5,step=0.25,red!10,ultra thin]
-    (0,0) grid (13,11);
-\draw[xshift=0.5,step=0.5,red!30,ultra thin]
-    (0,0) grid (13,11);
-\draw[xshift=0.5,step=1,red!70,ultra thin]
-    (0,0) grid (13,11);
-\moirphism{
-\_  \_    \_ \_            \_ \_               \_                \_ \_ \~<3>          \_ \_ \_             \_ \_ \>
-\_  \_    \~ \mor[s][red]  \~ \comul{red}[3]   \swap[3]<3>       \_ \_ \_             \_ \_ \mul{black}[3] \~ \_ \>
-\_  \_    \_ \_            \_ \_               \_                \_ \_                \_ \_ \_             \_ \_ \>
-\~  \c[5] \_ \_            \_ \_               \_ \_             \_ \swap[3]<3>       \_ \_ \_             \_ \mul{black}[5] \~ \>
-\_  \_    \_ \_            \_ \_               \~ \mor[g][green] \~ \_                \_ \_ \_             \_ \_ \>
-\_  \_    \~ \mor[r][pink] \~ \comul{black}[3] \_ \_             \_ \_                \_ \_ \mul{black}[3] \~ \_ \>
-\_  \_    \_ \_            \_ \_               \~ \mor[x][green] \~ \~ \mor[h][white] \~ \_ \_             \_ \_ \>
+\fbox{
+    \begin{tikzpicture}
+    \moirphism{
+    \f \_ \> \comul{black} \_ \> \f \g \~ \> \ccapp %\> \comul{black} \f
+    }
+    \end{tikzpicture}
 }
-\end{tikzpicture}
+
 \end{document}

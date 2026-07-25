@@ -1,126 +1,160 @@
-% moirphism.sty
-
-\usepackage{tikz}
-\usetikzlibrary{calc}
 \usepackage{xparse}
 \usepackage{xifthen}
+\usepackage{tikz}
 
-\tikzset{ 
+\usetikzlibrary{shapes,shapes.geometric,shapes.misc,calc,decorations.markings,arrows.meta}
+
+% \tikzset{baseline=-0.5ex,>=stealth'}
+% \tikzset{every picture/.append style={scale=0.4}}
+
+
+% Style of arrows of directed wires
+% \def\moirphismarrow{Stealth[length=4pt,width=5pt]}
+
+\tikzstyle{box}=[fill=white, draw=black, chamfered rectangle, chamfered rectangle corners={north east}, chamfered rectangle sep=2pt, inner sep=0pt, minimum height=1.4em, minimum width=1.4em, scale=0.7]
+\tikzstyle{boxOp}=[fill=white, draw=black, chamfered rectangle, chamfered rectangle corners={north west}, chamfered rectangle sep=2pt, inner sep=0pt, minimum height=1.4em, minimum width=1.4em, scale=0.7]
+\tikzstyle{func}=[fill=white, draw=black, shape=rounded rectangle, rounded rectangle left arc=none, minimum height=1.5em, minimum width=1.5em, scale=0.7]
+\tikzstyle{funcOp}=[fill=white, draw=black, shape=rounded rectangle, rounded rectangle right arc=none, minimum height=1.5em, minimum width=1.5em, scale=0.7]
+
+\tikzset{
     wire/.style={rounded corners=3, line width=.5pt}
-	, iden/.style={line width=.5pt}
+  , wire+/.style={rounded corners=3, line width=.5pt, postaction={decorate}, decoration={markings, mark=at position 0.5 with {\pgftransformxshift{2pt}\arrow{stealth}}}}
+  , wire-/.style={rounded corners=3, line width=.5pt, postaction={decorate}, decoration={markings, mark=at position 0.5 with {\pgftransformxshift{-2pt}\arrowreversed{stealth}}}}
 	, dot/.style={draw,fill=black, circle, inner sep=1pt}
 	, wdot/.style={draw,fill=white, circle, inner sep=1pt}
 	, cdot/.style={draw,fill=#1, circle, inner sep=1pt}
-    , box/.style={pos=.5,font=\tiny,draw, rounded corners=3, inner sep=1.5pt}
-	, tag/.style={draw, inner sep=1.5pt}
-	, wtag/.style={fill=white,tag, font=\tiny}
   , baseline=(current bounding box.center)
 }
 
+\newlength{\moirphismj}      % current x offset
+\newlength{\moirphismh}      % total y offset
+\newlength{\moirphismwip}    % current y offset
 
-\def\SW{(-0.5,-0.5)}
-\def\NW{(-0.5,+0.5)}
-\def\NE{(+0.5,-0.5)}
-\def\SE{(+0.5,+0.5)}
+\def\moirphismbuf{}
 
-\def\L{(-0.5,0)}
-\def\R{(+0.5,0)}
-\def\T{(0,+0.5)}
-\def\B{(0,-0.5)}
-
-\def\LU{(-0.5,+0.25)}
-\def\LD{(-0.5,-0.25)}
-
-\def\RU{(+0.5,+0.25)}
-\def\RD{(+0.5,-0.25)}
-
-\def\TL{(-0.25,+0.5)}
-\def\TR{(+0.25,+0.5)}
-
-\def\BL{(-0.25,-0.5)}
-\def\BR{(+0.25,-0.5)}
-
-\def\CL{(-0.25,0)}
-\def\CR{(+0.25,0)}
-\def\CU{(0,+0.25)}
-\def\CD{(0,-0.25)}
-
-\def\CNW{(-0.25,+0.25)}
-\def\CNE{(+0.25,+0.25)}
-\def\CSE{(+0.25,-0.25)}
-\def\CSW{(-0.25,-0.25)}
-
-\def\C{(0,0)}
-
-\newcounter{moirphismi}
-\newcounter{moirphismj}
+\NewDocumentCommand{\wrapmoirphism}{m O{1cm}}{%
+  % #1 = tikz code authored in real target units, centered at (0,0)
+  % #2 = height of this piece (default 1)
+  \edef\moirphismbuf{%
+    \unexpanded\expandafter{\moirphismbuf}%
+    \unexpanded{\begin{scope}[yshift=-(\moirphismwip+(#2)/2)]#1\end{scope}\addtolength{\moirphismwip}{#2}%}%
+  }}%
+  \addtolength{\moirphismh}{#2}%
+}
 
 \RenewDocumentCommand{\>}{}{%
-    \stepcounter{moirphismi}%
-    \setcounter{moirphismj}{0}%
+  \setlength{\moirphismwip}{0cm}
+  \begin{scope}[xshift=(\moirphismj+0.5cm),
+                yshift=\moirphismh/2]
+    \moirphismbuf
+  \end{scope}
+  \addtolength{\moirphismj}{1cm}
+  \setlength{\moirphismh}{0cm}
+  \gdef\moirphismbuf{}
 }
 
-% @height
-% @width
-\def\moirphismscale{1.0cm}
-\NewDocumentCommand{\wrapmoirphism}{m O{1} D<>{1}}{
-    \ifodd #2 \def\offsety{0}
-    \else     \def\offsety{(#2-1)/2} \fi
-    %\ifodd #3 \def\offsetx{0}
-    %\else     \def\offsetx{(#3-1)/2} \fi
-    \def\offsetx{(#3-1)/2}
-    \begin{scope}[
-        xshift= (\moirphismscale/2)+\moirphismscale*(\themoirphismj + \offsetx),
-        yshift=-(\moirphismscale/2)-\moirphismscale*(\themoirphismi + \offsety),
-        xscale=#3,
-        yscale={max(#2,2*#2-2)}]
-        #1
-    \end{scope}
-    \addtocounter{moirphismj}{1}
-}
-\NewDocumentCommand{\moirphism}{m}{
-   \setcounter{moirphismi}{0}
-   \setcounter{moirphismj}{0}
-   #1
+\NewDocumentCommand{\moirphism}{m}{%
+  \setlength{\moirphismj}{0cm}%
+  \setlength{\moirphismh}{0cm}%
+  \gdef\moirphismbuf{}%
+  #1\> % flush trailing column
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ---- primitives, authored in real (unscaled) units ----
+\NewDocumentCommand{\mor}{O{}O{}}{%
+  \wrapmoirphism{
+    \draw[wire] (-0.5,0) -- (0.5,0);
+    \node[box] at (0,0) {$#1$};
+  }[1cm]}
+
+\NewDocumentCommand{\mul}{m}{%
+  \wrapmoirphism{
+    \draw[wire] (-0.5,+0.5) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.5];
+    \draw[wire] (0,0) -- (0.5,0);
+    \node[cdot=#1] at (0,0) {};
+  }[2cm]}
+
+\NewDocumentCommand{\comul}{m}{%
+  \wrapmoirphism{
+    \draw[wire] (-0.5,0) -- (0,0);
+    \draw[wire] (+0.5,+0.5) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.5];
+    \node[cdot=#1] at (0,0) {};
+  }[2cm]}
+
+\NewDocumentCommand{\swap}{}{%
+  \wrapmoirphism{
+    \draw[wire] (-0.5,+0.25) -- (-0.25,+0.25) -- (+0.25,-0.25) -- (+0.5,-0.25);
+    \draw[wire] (-0.5,-0.25) -- (-0.25,-0.25) -- (+0.25,+0.25) -- (+0.5,+0.25);
+  }[1cm]}
+
+\NewDocumentCommand{\ccap}{}{\wrapmoirphism{\draw[wire] (-0.5,+0.5) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.5];}[2cm]}
+\NewDocumentCommand{\ccup}{}{\wrapmoirphism{\draw[wire] (+0.5,+0.5) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.5];}[2cm]}
+
+\NewDocumentCommand{\ccapp}{}{\wrapmoirphism{\draw[wire+] (-0.5,+0.5) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.5];}[2cm] }
+\NewDocumentCommand{\ccapn}{}{\wrapmoirphism{\draw[wire-] (-0.5,+0.5) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.5];}[2cm] }
+
+\NewDocumentCommand{\ccupp}{}{\wrapmoirphism{\draw[wire+] (+0.5,+0.5) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.5];}[2cm] }
+\NewDocumentCommand{\ccupn}{}{\wrapmoirphism{\draw[wire-] (+0.5,+0.5) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.5];}[2cm] }
+
+%%%%%%%%%%%%%%%%%%% DIRECTED VARIANTS
+
+\RenewDocumentCommand{\_}{}{  \wrapmoirphism{}[1cm] }
+\RenewDocumentCommand{\~}{}{  \wrapmoirphism{\draw[wire]  (-0.5,0) -- (+0.5,0);}[1cm] }
+\NewDocumentCommand{\wirep}{}{\wrapmoirphism{\draw[wire+] (-0.5,0) -- (+0.5,0);}[1cm] }
+\NewDocumentCommand{\wiren}{}{\wrapmoirphism{\draw[wire-] (-0.5,0) -- (+0.5,0);}[1cm] }
 
 
-% The empty diagram.
-\RenewDocumentCommand{\_}{}{
-    \wrapmoirphism{}
-}
-% The wire.
-\RenewDocumentCommand{\~}{}{
+\NewDocumentCommand{\morp}{O{}O{}}{
     \wrapmoirphism{
-        \draw[wire] \L -- \R;
-    }
+        \draw[wire+] (-0.5,0) -- (+0.5,0);
+        \draw[fill=#2] (-0.25,-0.25) rectangle (+0.25,+0.25);
+        \node[] at (0,0) {$#1$};
+    }[2cm]
 }
-\NewDocumentCommand{\mor}{O{}O{}}{
+\NewDocumentCommand{\morn}{O{}O{}}{
     \wrapmoirphism{
-        \draw[wire] \L -- \R;
-        \draw[fill=#2] \CSW rectangle \CNE;
-        \node[] at \C {$#1$};    
-    }
+        \draw[wire-] (-0.5,0) -- (+0.5,0);
+        \draw[fill=#2] (-0.25,-0.25) rectangle (+0.25,+0.25);
+        \node[] at (0,0) {$#1$};
+    }[2cm]
 }
-\NewDocumentCommand{\mul}{m}{
+\NewDocumentCommand{\mulp}{m}{
     \wrapmoirphism{
-        \draw[wire] \C -- \R;
-        \draw[wire] \LU -| \CD -- \LD;
-        \node[cdot=#1] at \C {};
-    }
+        \draw[wire+] (-0.5,+0.25) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.25];
+        \draw[wire+] (0,0) -- (+0.5,0);
+        \node[cdot=#1] at (0,0) {};
+    }[2cm]
 }
-\NewDocumentCommand{\comul}{m}{
+\NewDocumentCommand{\muln}{m}{
     \wrapmoirphism{
-        \draw[wire] \RU -| \CD -- \RD;
-        \draw[wire] \L -- \C;
-        \node[cdot=#1] at \C {};
-    }
+        \draw[wire-] (-0.5,+0.25) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.25];
+        \draw[wire-] (0,0) -- (+0.5,0);
+        \node[cdot=#1] at (0,0) {};
+    }[2cm]
 }
-\NewDocumentCommand{\swap}{}{
+\NewDocumentCommand{\comulp}{m}{
     \wrapmoirphism{
-	    \draw[wire] \LU -- \CNW -- \CSE -- \RD;
-	    \draw[wire] \LD -- \CSW -- \CNE -- \RU;
-    }
+        \draw[wire+] (-0.5,0) -- (0,0);
+        \draw[wire+] (+0.5,+0.25) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.25];
+        \node[cdot=#1] at (0,0) {};
+    }[2cm]
+}
+\NewDocumentCommand{\comuln}{m}{
+    \wrapmoirphism{
+        \draw[wire-] (-0.5,0) -- (0,0);
+        \draw[wire-] (+0.5,+0.25) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.25];
+        \node[cdot=#1] at (0,0) {};
+    }[2cm]
+}
+\NewDocumentCommand{\swapp}{}{
+    \wrapmoirphism{
+	    \draw[wire+] (-0.5,+0.25) -- (-0.25,+0.25) -- (+0.25,-0.25) -- (+0.5,-0.25);
+	    \draw[wire+] (-0.5,-0.25) -- (-0.25,-0.25) -- (+0.25,+0.25) -- (+0.5,+0.25);
+    }[2cm]
+}
+\NewDocumentCommand{\swapn}{}{
+    \wrapmoirphism{
+	    \draw[wire-] (-0.5,+0.25) -- (-0.25,+0.25) -- (+0.25,-0.25) -- (+0.5,-0.25);
+	    \draw[wire-] (-0.5,-0.25) -- (-0.25,-0.25) -- (+0.25,+0.25) -- (+0.5,+0.25);
+    }[2cm]
 }
