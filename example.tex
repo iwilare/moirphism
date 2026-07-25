@@ -2,18 +2,15 @@
 
 \usepackage{moirphism}
 
-\def\f{\mor[f][red]}
-\def\g{\mor[g][red]}
-\def\c{\comul{black}}
-\def\m{\mul{black}}
-
 \begin{document}
 
 % \begin{tikzpicture}
 
-% \tikzset{
-%     wire/.style={rounded corners=3, line width=0.75pt}
-% 	, iden/.style={line width=1pt} }
+\tikzset{
+    wire/.style={rounded corners=3, line width=0.75pt}
+	, iden/.style={line width=1pt} }
+
+\tikzset{every picture/.append style={scale=0.6}}
 
 % % Draw a grid
 % \draw[xshift=0.5,step=0.25,gray!10,ultra thin]
@@ -24,13 +21,13 @@
 %     (0,0) grid (13,-11);
 
 % \moirphism{
-%   \f \> \comul{black} \> \f \g \> \ccap %\> \comul{black} \f
+%   \f \> \comul{black} \> \f \mor{g} \> \ccap %\> \comul{black} \f
 % }
 
 \fbox{
     \begin{tikzpicture}
     \moirphism{
-        \f \> \comul{black} \> \f \g \> \ccapp
+        \mor{f} \> \comul{black} \> \mor{f} \mor{g} \> \ccapp
     }
     \end{tikzpicture}
 }
@@ -38,7 +35,7 @@ Asd
 \fbox{
     \begin{tikzpicture}
     \moirphism{
-        \f \> \comulvar{black} \> \f \g \> \ccapp
+        \mor{f} \> \comulvar{black} \> \mor{f} \mor{g} \> \ccapp
     }
     \end{tikzpicture}
 }
@@ -46,7 +43,7 @@ Asd
 \fbox{
     \begin{tikzpicture}
     \moirphism{
-    \f \_ \> \comul{black} \_ \> \f \g \~ \> \ccapp \_ %\> \comul{black} \f
+    \mor{f} \_ \> \comul{black} \_ \> \mor{f} \mor{g} \~ \> \ccapp \_ %\> \comul{black} \f
     }
     \end{tikzpicture}
 }
