@@ -1,92 +1,35 @@
 \documentclass[]{article}
 
-\usepackage{moirphism}
+\usepackage{strongdiagrams}
+\usepackage{comment}
 
 \begin{document}
 
 % \begin{tikzpicture}
+
 \tikzset{every picture/.append style={scale=0.6}}
 
-\fbox{
-    \begin{tikzpicture}
-    \moirphism{
-        \mor{f}[1.0cm] \> \mor{h}[1.0cm] %\> \comul \> \mor{f} \mor{g} \> \ccapp
-    }
-    \end{tikzpicture}
-}
-Standard
+Copier:$\MCopier$
+Copier:$\MCopier[+]$
+Copier:$\MCopier[-]$
 
-\fbox{
-    \begin{tikzpicture}
-    \moirphism{
-        \comulp
-    }
-    \end{tikzpicture}
-}
+Copier:$\MCup$
+Copier:$\MCup[+]$
+Copier:$\MCup[-]$
 
-\fbox{
-    \begin{tikzpicture}
-    \moirphism{
-        \mor{f} \> \comulp \> \idw[0.1cm] \idw[0.1cm] \> \mor{f} \mor{g}
-    }
-    \end{tikzpicture}
-}
+Copier:$\MCap$
+Copier:$\MCap[+]$
+Copier:$\MCap[-]$
 
-\fbox{
-    \begin{tikzpicture}
-    \moirphism{
-        \mor{f} \> \comulvarp \> \idw[0.1cm] \idw[0.1cm] \> \mor{f} \mor{g}
-    }
-    \end{tikzpicture}
-}
+$\MProjDP$
 
-\fbox{
-    \begin{tikzpicture}
-    \moirphism{ \comul \idw \> \idw \mul }
-    \end{tikzpicture}
-    =
-    \begin{tikzpicture}
-    \moirphism{ \idw \comul \> \mul \idw }
-    \end{tikzpicture}
-    =
-    \begin{tikzpicture}
-    \moirphism{ \mul \> \comul }
-    \end{tikzpicture}
-}
-\fbox{
-    \begin{tikzpicture}
-    \moirphism{\mor{f} \> \comul}
-    \end{tikzpicture}
-    $\le$
-    \begin{tikzpicture}
-    \moirphism{\comul \> \mor{f} \mor{f}}
-    \end{tikzpicture}
-}
-\fbox{
-    \begin{tikzpicture}
-    \moirphism{\sw \> \mor{f} \> \comul}
-    \end{tikzpicture}
-    $\le$
-    \begin{tikzpicture}
-    \moirphism{\comul \> \mor{f} \mor{f} \> \sw \sw}
-    \end{tikzpicture}
-}
+Copier:$\MProjDP\MCopierNoWire[+]$ = ASD ${\tensor{\MProjDP}{\MProjDP}}$ AD
 
-% Asd
-% \fbox{
-%     \begin{tikzpicture}
-%     \moirphism{
-%         \mor{f} \> \comulvar \> \mor{f} \mor{g} \> \ccapp
-%     }
-%     \end{tikzpicture}
-% }
-% Asd
-% \fbox{
-%     \begin{tikzpicture}
-%     \moirphism{
-%         \mor{f} \_ \> \comul \_ \> \mor{f} \mor{g} \~ \> \ccapp \_ %\> \comul \f
-%     }
-%     \end{tikzpicture}
-% }
+% Asd$\tensor{\MH[+]\>\MH[+]}{\MCopier}$miao
 
+% Asd$\tensor{\MH[+]\>\MNode{white}\>\MH[+]}{\MCopier}$miao
+
+
+% $\MProj$
+% Asd$\MW\MProj\MCopier[+]$miao
 \end{document}

@@ -1,0 +1,15 @@
+% Node styles
+\tikzstyle{none}=[inner sep=0pt]
+\tikzstyle{label}=[fill=none, draw=none, shape=circle, scale=0.7]
+\tikzstyle{black}=[fill=black, draw=black, shape=circle, inner sep=0pt, minimum size=3pt]
+\tikzstyle{white}=[fill=white, draw=black, shape=circle, inner sep=0pt, minimum size=3pt]
+
+\tikzstyle{box}=[fill=white, draw=black, chamfered rectangle, chamfered rectangle corners={north east}, chamfered rectangle sep=2pt, inner sep=0pt, minimum height=1.4em, minimum width=1.4em, scale=0.7]
+\tikzstyle{boxOp}=[fill=white, draw=black, chamfered rectangle, chamfered rectangle corners={north west}, chamfered rectangle sep=2pt, inner sep=0pt, minimum height=1.4em, minimum width=1.4em, scale=0.7]
+\tikzstyle{func}=[fill=white, draw=black, shape=rounded rectangle, rounded rectangle left arc=none, minimum height=1.5em, minimum width=1.5em, scale=0.7]
+\tikzstyle{funcOp}=[fill=white, draw=black, shape=rounded rectangle, rounded rectangle right arc=none, minimum height=1.5em, minimum width=1.5em, scale=0.7]
+
+% Edge styles
+\tikzstyle{wire}=[-]
+\tikzset{wire+/.style={ postaction={decorate}, decoration={markings, mark=at position 0.5 with {\pgftransformxshift{2pt}\arrow{stealth}}}}}
+\tikzset{wire-/.style={ postaction={decorate}, decoration={markings, mark=at position 0.5 with {\pgftransformxshift{-2pt}\arrowreversed{stealth}}}}}

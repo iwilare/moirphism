@@ -1,0 +1,148 @@
+\usepackage{xparse}
+\usepackage{xifthen}
+\usepackage{tikz}
+
+\usetikzlibrary{shapes,shapes.geometric,shapes.misc,calc,decorations.markings,arrows.meta}
+
+\tikzstyle{box}=[fill=white, draw=black, chamfered rectangle, chamfered rectangle corners={north east}, chamfered rectangle sep=2pt, inner sep=0pt, minimum height=1.4em, minimum width=1.4em, scale=0.7]
+\tikzstyle{boxOp}=[fill=white, draw=black, chamfered rectangle, chamfered rectangle corners={north west}, chamfered rectangle sep=2pt, inner sep=0pt, minimum height=1.4em, minimum width=1.4em, scale=0.7]
+\tikzstyle{func}=[fill=white, draw=black, shape=rounded rectangle, rounded rectangle left arc=none, minimum height=1.5em, minimum width=1.5em, scale=0.7]
+\tikzstyle{funcOp}=[fill=white, draw=black, shape=rounded rectangle, rounded rectangle right arc=none, minimum height=1.5em, minimum width=1.5em, scale=0.7]
+
+\tikzset{
+    wire/.style={rounded corners=3, }
+  , wire+/.style={rounded corners=3, postaction={decorate}, decoration={markings, mark=at position 0.4 with {\arrow{stealth}}}}
+  , wire-/.style={rounded corners=3, postaction={decorate}, decoration={markings, mark=at position 0.4 with {\arrowreversed{stealth}}}}
+	, wire+end/.style={rounded corners=3, postaction={decorate}, decoration={markings, mark=at position 0.93 with {\pgftransformxshift{2pt}\arrow{stealth}}}}
+  , wire-end/.style={rounded corners=3, postaction={decorate}, decoration={markings, mark=at position 0.93 with {\pgftransformxshift{-2pt}\arrowreversed{stealth}}}}
+}
+
+\input{diagrams.tikzstyles}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NewDocumentCommand{\MWire}{O{}}{%
+    \begin{tikzpicture}[baseline={(0,0)}]
+        \draw[wire#1] (-0.5,0) -- (0.5,0);
+        \pgfresetboundingbox
+        \path (-0.5,0) rectangle (0.5,0);
+    \end{tikzpicture}%
+}
+\NewDocumentCommand{\MEmpty}{}{%
+    \begin{tikzpicture}[baseline={(0,0)}]
+        \pgfresetboundingbox
+        \path (-0.5,0) rectangle (0.5,0);
+    \end{tikzpicture}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NewDocumentCommand{\MHalfWire}{O{}}{%
+    \begin{tikzpicture}[baseline={(0,0)}]
+        \draw[wire#1] (-0.25,0) -- (0.25,0);
+        \pgfresetboundingbox
+        \path (-0.25,0) rectangle (0.25,0);
+    \end{tikzpicture}%
+}
+\NewDocumentCommand{\MHalfEmpty}{}{%
+    \begin{tikzpicture}[baseline={(0,0)}]
+        \pgfresetboundingbox
+        \path (-0.25,0) rectangle (0.25,0);
+    \end{tikzpicture}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Template function for nodes
+\NewDocumentCommand{\MNode}{m}{%
+    \begin{tikzpicture}[baseline={(0,0)}]
+        \node[#1] at (0,0) {};
+        \pgfresetboundingbox
+        \path (0,0) rectangle (0,0);
+    \end{tikzpicture}%
+}
+
+\NewDocumentCommand{\MWiredNode}{m O{} O{}}{%
+    \begin{tikzpicture}[baseline={(0,0)}]
+        \node[#1] (a) at (0,0) {};
+        \draw[wire#2] (-0.5,0) -- (a.west);
+        \draw[wire#3] (a.east) -- (0.5,0);
+        \pgfresetboundingbox
+        \path (-0.5,-0.5) rectangle (0.5,0.5);
+    \end{tikzpicture}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NewDocumentCommand{\MSemicircle}{O{}O{}}{%
+    \begin{tikzpicture}[baseline={(0,0)}]
+        \draw[wire#1] (0,0) arc[start angle=180,end angle=90,x radius=0.5,y radius=0.5];
+        \draw[wire#2] (0,0) arc[start angle=180,end angle=270,x radius=0.5,y radius=0.5];
+        \pgfresetboundingbox
+        \path (0,-1) rectangle (0.5,1);
+    \end{tikzpicture}%
+}
+
+\NewDocumentCommand{\MCup}{O{}O{}}{%
+    \begin{tikzpicture}[baseline={(0,0)}]
+        \draw[wire#1] (+0.5,+0.5) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.5];
+        \pgfresetboundingbox
+        \path (0,-0.5) rectangle (0.5,0.5);
+    \end{tikzpicture}%
+}
+\NewDocumentCommand{\MCap}{O{}O{}}{%
+    \begin{tikzpicture}[baseline={(0,0)}]
+        \draw[wire#1] (0,+0.5) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.5];
+        \pgfresetboundingbox
+        \path (0,-0.5) rectangle (0.5,0.5);
+    \end{tikzpicture}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NewDocumentCommand{\MCopier}{O{}}{%
+  \seq{\MHalfWire[#1]\MNode{black}\MSemicircle[#1][#1]}
+}
+
+\NewDocumentCommand{\MCopierNoWire}{O{}}{%
+  \seq{\MNode{black}\MSemicircle[#1][#1]}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NewDocumentCommand{\MProjDP}{}{{\MWiredNode{white}[ ][+]}}
+\NewDocumentCommand{\MProjDN}{}{{\MWiredNode{white}[ ][-]}}
+\NewDocumentCommand{\MProjPD}{}{{\MWiredNode{white}[+][ ]}}
+\NewDocumentCommand{\MProjND}{}{{\MWiredNode{white}[-][ ]}}
+
+
+
+
+
+
+
+\newcommand{\sidebyside}[2]{%
+  \hbox{%
+    \llap{#2}%
+    #1%
+  }%
+}
+
+\newcommand{\tensor}[2]{%
+  \setbox0=\hbox{#1}%
+  \setbox1=\hbox{#2}%
+  \dimen2=\dp0
+  \advance\dimen2 by \ht1
+  \divide\dimen2 by 2
+  \raisebox{-\dimen2}{%
+    \vbox{\offinterlineskip\box0\box1}%
+  }%
+}
+
+\RenewDocumentCommand{\>}{}{%
+\hspace{-0.01mm}%
+}
+
+\newcommand{\seq}[1]{%
+  \hbox{#1}%
+}
