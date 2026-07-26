@@ -101,11 +101,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \NewDocumentCommand{\MCopier}{O{}}{%
-  \seq{\MHalfWire[#1]\MNode{black}\MSemicircle[#1][#1]}
+\MHalfWire[#1]\MNode{black}\MSemicircle[#1][#1]%
 }
 
 \NewDocumentCommand{\MCopierNoWire}{O{}}{%
-  \seq{\MNode{black}\MSemicircle[#1][#1]}
+ \MNode{black}\MSemicircle[#1][#1]%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -139,10 +139,15 @@
   }%
 }
 
-\RenewDocumentCommand{\>}{}{%
-\hspace{-0.01mm}%
+\newcommand{\seq}[2]{%
+  \setbox0=\hbox{#1}%
+  \setbox1=\hbox{#2}%
+  \hbox to \dimexpr\wd0+\wd1\relax{%
+    \hbox to 0pt{\kern\wd0 \box1\hss}%
+    \box0
+  }%
 }
 
-\newcommand{\seq}[1]{%
-  \hbox{#1}%
+\RenewDocumentCommand{\>}{}{%
+\hspace{-0.01mm}%
 }
