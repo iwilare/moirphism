@@ -9,17 +9,45 @@
 \tikzstyle{func}=[fill=white, draw=black, shape=rounded rectangle, rounded rectangle left arc=none, minimum height=1.5em, minimum width=1.5em, scale=0.7]
 \tikzstyle{funcOp}=[fill=white, draw=black, shape=rounded rectangle, rounded rectangle right arc=none, minimum height=1.5em, minimum width=1.5em, scale=0.7]
 
-\tikzset{
-    wire/.style={rounded corners=3, }
-  , wire+/.style={rounded corners=3, postaction={decorate}, decoration={markings, mark=at position 0.4 with {\arrow{stealth}}}}
-  , wire-/.style={rounded corners=3, postaction={decorate}, decoration={markings, mark=at position 0.4 with {\arrowreversed{stealth}}}}
-	, wire+end/.style={rounded corners=3, postaction={decorate}, decoration={markings, mark=at position 0.93 with {\pgftransformxshift{2pt}\arrow{stealth}}}}
-  , wire-end/.style={rounded corners=3, postaction={decorate}, decoration={markings, mark=at position 0.93 with {\pgftransformxshift{-2pt}\arrowreversed{stealth}}}}
-}
-
 \input{diagrams.tikzstyles}
 
+\tikzset{
+    wire/.style=    {rounded corners=3, line width=0.5pt, }
+  , wire+/.style=   {rounded corners=3, line width=0.5pt, postaction={decorate}, decoration={markings, mark=at position 0.5 with {\pgftransformxshift{2pt}\arrow{stealth}}}}
+  , wire-/.style=   {rounded corners=3, line width=0.5pt, postaction={decorate}, decoration={markings, mark=at position 0.5 with {\pgftransformxshift{-2pt}\arrowreversed{stealth}}}}
+	, wire+end/.style={rounded corners=3, line width=0.5pt, postaction={decorate}, decoration={markings, mark=at position 0.93 with {\pgftransformxshift{2pt}\arrow{stealth}}}}
+  , wire-end/.style={rounded corners=3, line width=0.5pt, postaction={decorate}, decoration={markings, mark=at position 0.93 with {\pgftransformxshift{-2pt}\arrowreversed{stealth}}}}
+}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\MPar}[2]{%
+  \setbox0=\hbox{#1}%
+  \setbox1=\hbox{#2}%
+  \dimen2=\dp0
+  \advance\dimen2 by \ht1
+  \divide\dimen2 by 2
+  \raisebox{-\dimen2}{%
+    \vbox{\offinterlineskip\box0\box1}%
+  }%
+}
+
+\newcommand{\MSeq}[2]{%
+  \hbadness=10000%
+  \setbox0=\hbox{#1}%
+  \setbox1=\hbox{#2}%
+  \hbox to \dimexpr\wd0+\wd1\relax{%
+    \hbox to 0pt{\kern\wd0 \box1\hss}%
+    \box0
+  }%
+}
+
+\RenewDocumentCommand{\>}{}{%
+\hspace{-0.01mm}%
+}
+
+%%%%%%%%%%%%%%%%%% WIRES AND EMPTY %%%%%%%%%%%%%%%%%%%%
 
 \NewDocumentCommand{\MWire}{O{}}{%
     \begin{tikzpicture}[baseline={(0,0)}]
@@ -35,8 +63,6 @@
     \end{tikzpicture}%
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \NewDocumentCommand{\MHalfWire}{O{}}{%
     \begin{tikzpicture}[baseline={(0,0)}]
         \draw[wire#1] (-0.25,0) -- (0.25,0);
@@ -51,17 +77,18 @@
     \end{tikzpicture}%
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%% ATOMS AND BOXES %%%%%%%%%%%%%%%%%%%%
 
 % Template function for nodes
 \NewDocumentCommand{\MNode}{m}{%
     \begin{tikzpicture}[baseline={(0,0)}]
         \node[#1] at (0,0) {};
         \pgfresetboundingbox
-        \path (0,0) rectangle (0,0);
+        \path (0,-0.5) rectangle (0,0.5);
     \end{tikzpicture}%
 }
 
+% Use this to 1. add left and right wires, 2. anchor the wires to the node
 \NewDocumentCommand{\MWiredNode}{m O{} O{}}{%
     \begin{tikzpicture}[baseline={(0,0)}]
         \node[#1] (a) at (0,0) {};
@@ -72,12 +99,43 @@
     \end{tikzpicture}%
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is the same as WiredNode but the wires attach to the center
+\NewDocumentCommand{\MWiredNodeSingularity}{m O{} O{}}{%
+    \begin{tikzpicture}[baseline={(0,0)}]
+        \draw[wire#2] (-0.5,0) -- (0,0);
+        \draw[wire#3] (0,0) -- (0.5,0);
+        \node[#1] (a) at (0,0) {};
+        \pgfresetboundingbox
+        \path (-0.5,-0.5) rectangle (0.5,0.5);
+    \end{tikzpicture}%
+}
 
-\NewDocumentCommand{\MSemicircle}{O{}O{}}{%
+\NewDocumentCommand{\MTyp}{m O{0.5}}{%
+\begin{tikzpicture}[baseline={(0,0)}]
+    \node at (0,0) {$#1$};
+    \pgfresetboundingbox
+    \path (-#2,-0.5) rectangle (#2,0.5);
+\end{tikzpicture}%
+}
+
+\NewDocumentCommand{\MTypTwo}{m m}{\MPar{\MTyp{#1}}{\MTyp{#2}}}
+
+
+%%%%%%%%%%%%%%%%%%%% COMPACT CLOSED %%%%%%%%%%%%%%%%%%
+
+\NewDocumentCommand{\MCupSemicircle}{O{}O{}}{%
     \begin{tikzpicture}[baseline={(0,0)}]
         \draw[wire#1] (0,0) arc[start angle=180,end angle=90,x radius=0.5,y radius=0.5];
         \draw[wire#2] (0,0) arc[start angle=180,end angle=270,x radius=0.5,y radius=0.5];
+        \pgfresetboundingbox
+        \path (0,-1) rectangle (0.5,1);
+    \end{tikzpicture}%
+}
+
+\NewDocumentCommand{\MCapSemicircle}{O{}O{}}{%
+    \begin{tikzpicture}[baseline={(0,0)}]
+        \draw[wire#2] (0,0.5) arc[start angle=90,end angle=0,x radius=0.5,y radius=0.5];
+        \draw[wire#1] (0,-0.5) arc[start angle=-90,end angle=0,x radius=0.5,y radius=0.5];
         \pgfresetboundingbox
         \path (0,-1) rectangle (0.5,1);
     \end{tikzpicture}%
@@ -90,6 +148,7 @@
         \path (0,-0.5) rectangle (0.5,0.5);
     \end{tikzpicture}%
 }
+
 \NewDocumentCommand{\MCap}{O{}O{}}{%
     \begin{tikzpicture}[baseline={(0,0)}]
         \draw[wire#1] (0,+0.5) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.5];
@@ -98,56 +157,51 @@
     \end{tikzpicture}%
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewDocumentCommand{\MSwap}{O{}O{}}{%
+    \begin{tikzpicture}[baseline={(0,0)}]
+        \draw[wire#1] (-0.5,+0.5) .. controls (0,+0.5) and (0,-0.5) .. (+0.5,-0.5);
+        \draw[wire#2] (-0.5,-0.5) .. controls (0,-0.5) and (0,+0.5) .. (+0.5,+0.5);
+        \pgfresetboundingbox
+        \path (-0.5,-0.5) rectangle (0.5,0.5);
+    \end{tikzpicture}%
+}
+
+%%%%%%%%%%%%%%%%%%%% (CO)MONOID %%%%%%%%%%%%%%%%%%
 
 \NewDocumentCommand{\MCopier}{O{}}{%
-\MHalfWire[#1]\MNode{black}\MSemicircle[#1][#1]%
+\MHalfWire[#1]\MNode{black}\MCupSemicircle[#1][#1]%
 }
-
 \NewDocumentCommand{\MCopierNoWire}{O{}}{%
- \MNode{black}\MSemicircle[#1][#1]%
+\MNode{black}\MCupSemicircle[#1][#1]%
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NewDocumentCommand{\MCocopier}{O{}}{%
+\MCapSemicircle[#1][#1]\MNode{black}\MHalfWire[#1]%
+}
 
-\NewDocumentCommand{\MProjDP}{}{{\MWiredNode{white}[ ][+]}}
+\NewDocumentCommand{\MCocopierNoWire}{O{}}{%
+\MCapSemicircle[#1][#1]\MNode{black}%
+}
+
+\NewDocumentCommand{\MDiscard}{O{}}{%
+\MHalfWire[#1]\MNode{black}\MHalfEmpty%
+}
+\NewDocumentCommand{\MDiscardNoWire}{O{}}{%
+\MNode{black}\MHalfEmpty%
+}
+
+\NewDocumentCommand{\MCodiscard}{O{}}{%
+\MHalfEmpty\MNode{black}\MHalfWire[#1]%
+}
+\NewDocumentCommand{\MCodiscardNoWire}{O{}}{%
+\MHalfEmpty\MNode{black}%
+}
+
+%%%%%%%%%%%%%%%%%%%% DIRECTEDNESS %%%%%%%%%%%%%%%%%%
+
+\NewDocumentCommand{\MProjDP}{}{{\MWiredNodeSingularity{white}[ ][+]}}
 \NewDocumentCommand{\MProjDN}{}{{\MWiredNode{white}[ ][-]}}
-\NewDocumentCommand{\MProjPD}{}{{\MWiredNode{white}[+][ ]}}
+\NewDocumentCommand{\MProjPD}{}{{\MWiredNodeSingularity{white}[+][ ]}}
 \NewDocumentCommand{\MProjND}{}{{\MWiredNode{white}[-][ ]}}
 
-
-
-
-
-
-
-\newcommand{\sidebyside}[2]{%
-  \hbox{%
-    \llap{#2}%
-    #1%
-  }%
-}
-
-\newcommand{\tensor}[2]{%
-  \setbox0=\hbox{#1}%
-  \setbox1=\hbox{#2}%
-  \dimen2=\dp0
-  \advance\dimen2 by \ht1
-  \divide\dimen2 by 2
-  \raisebox{-\dimen2}{%
-    \vbox{\offinterlineskip\box0\box1}%
-  }%
-}
-
-\newcommand{\seq}[2]{%
-  \setbox0=\hbox{#1}%
-  \setbox1=\hbox{#2}%
-  \hbox to \dimexpr\wd0+\wd1\relax{%
-    \hbox to 0pt{\kern\wd0 \box1\hss}%
-    \box0
-  }%
-}
-
-\RenewDocumentCommand{\>}{}{%
-\hspace{-0.01mm}%
-}
+\NewDocumentCommand{\NoLeftProj}{O{}}{\MSeq{\MNode{white}}{\MHalfWire[#1]}}

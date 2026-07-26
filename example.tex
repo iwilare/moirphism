@@ -23,13 +23,55 @@ Copier:$\MCap[-]$
 
 $\MProjDP$
 
-Copier:$\MProjDP\MCopierNoWire[+]$ = ASD ${\tensor{\MProjDP}{\MProjDP}}$ AD
+Copier:$\MProjDP\MCopierNoWire[+]$ = ASD ${\MPar{\MProjDP}{\MProjDP}}$ AD
 
-Test: $\seq{\MNode{white}}{\MCopier[+]}$
+Test: \MTyp{X}\MHalfWire\MSeq{\MNode{white}}{\MCopier[+]}\MPar{\MTyp{X}}{\MTyp{X}} =
 
-% Asd$\tensor{\MH[+]\>\MH[+]}{\MCopier}$miao
+\[
+\mbox{\MProjDP\MCopierNoWire[+]} = \MCopier\MPar{\NoLeftProj[+]}{\NoLeftProj[+]}
+\qquad
+\mbox{\MProjDP\MCopierNoWire[-]} = \MCopier\MPar{\NoLeftProj[-]}{\NoLeftProj[-]}
+\qquad
+\mbox{\MProjDP\MDiscardNoWire[+]} = \MDiscard
+\qquad
+\mbox{\MProjDN\MDiscardNoWire[-]} = \MDiscard
+\]
 
-% Asd$\tensor{\MH[+]\>\MNode{white}\>\MH[+]}{\MCopier}$miao
+\[
+\begin{array}{cc}
+\MTyp{A}\MWire[+]\MTyp{A}
+\qquad
+\MTyp{A}\MCopier[+]\MPar{\MTyp{A}}{\MTyp{A}}
+\qquad
+\MTyp{A}\MDiscard[+]
+\qquad
+\MPar{\MTyp{A}}{\MTyp{A}}\MCocopier[-]\MTyp{A}
+\qquad
+\MTyp{A}\MCodiscard[-]
+\qquad
+\MPar{\MTyp{A}}{\MTyp{B}}\MSwap\MPar{\MTyp{A}}{\MTyp{B}}
+\\
+\MTyp{A}\MProjDP\MTyp{A}
+\qquad
+\MTyp{A}\MProjDN\MTyp{A}
+\qquad
+\MCup[+]\MPar{\MTyp{A}}{\MTyp{A}}
+\qquad
+\MPar{\MTyp{A}}{\MTyp{A}}\MCap[+]
+\end{array}
+\]
+% \qquad
+% \MProjDP\MCopierNoWire[-] = \MCopier\MPar{\NoLeftProj[-]}{\NoLeftProj[-]}
+% \qquad
+% \MProjDP\MDiscardNoWire[+] = \MDiscard
+% \qquad
+% \MProjDN\MDiscardNoWire[-] = \MDiscard
+% \]
+
+
+% Asd$\MPar{\MH[+]\>\MH[+]}{\MCopier}$miao
+
+% Asd$\MPar{\MH[+]\>\MNode{white}\>\MH[+]}{\MCopier}$miao
 
 
 % $\MProj$
