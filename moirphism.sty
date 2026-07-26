@@ -10,12 +10,16 @@
 \tikzstyle{funcOp}=[fill=white, draw=black, shape=rounded rectangle, rounded rectangle right arc=none, minimum height=1.5em, minimum width=1.5em, scale=0.7]
 
 \tikzset{
-    wire/.style={rounded corners=3, line width=.5pt}
-  , wire+/.style={rounded corners=3, line width=.5pt, postaction={decorate}, decoration={markings, mark=at position 0.5 with {\pgftransformxshift{2pt}\arrow{stealth}}}}
-  , wire-/.style={rounded corners=3, line width=.5pt, postaction={decorate}, decoration={markings, mark=at position 0.5 with {\pgftransformxshift{-2pt}\arrowreversed{stealth}}}}
-	, dot/.style={draw,fill=black, circle, inner sep=1pt}
-	, wdot/.style={draw,fill=white, circle, inner sep=1pt}
-	, cdot/.style={draw,fill=#1, circle, inner sep=1pt}
+    wire/.style={rounded corners=3, }
+  , wire+/.style={rounded corners=3, postaction={decorate}, decoration={markings, mark=at position 0.5 with {\pgftransformxshift{2pt}\arrow{stealth}}}}
+  , wire-/.style={rounded corners=3, postaction={decorate}, decoration={markings, mark=at position 0.5 with {\pgftransformxshift{-2pt}\arrowreversed{stealth}}}}
+	, wire+end/.style={rounded corners=3, postaction={decorate}, decoration={markings, mark=at position 0.93 with {\pgftransformxshift{2pt}\arrow{stealth}}}}
+  , wire-end/.style={rounded corners=3, postaction={decorate}, decoration={markings, mark=at position 0.93 with {\pgftransformxshift{-2pt}\arrowreversed{stealth}}}}
+	, wire+beg/.style={rounded corners=3, postaction={decorate}, decoration={markings, mark=at position 0.0 with {\pgftransformxshift{2pt}\arrow{stealth}}}}
+  , wire-beg/.style={rounded corners=3, postaction={decorate}, decoration={markings, mark=at position 0.0 with {\pgftransformxshift{-2pt}\arrowreversed{stealth}}}}
+	, dot/.style={draw,fill=black, circle, inner sep=0.6pt}
+	, wdot/.style={draw,fill=white, circle, inner sep=0.6pt}
+	, cdot/.style={draw,fill=#1, circle, inner sep=0.6pt}
   , baseline=(current bounding box.center)
 }
 
@@ -37,14 +41,14 @@
     \unexpanded\expandafter{\moirphismbuf}%
     \unexpanded{%
       \begin{scope}[yshift=-(\moirphismwip+(#2)/2)]%
-        \setlength{\moirphismW}{\dimexpr #3cm/2\relax}%
+        \setlength{\moirphismW}{\dimexpr #3/2\relax}%
         \ifdim 2\moirphismW<\moirphismmaxw \moirphismextend{#4}{#5}\fi
         #1%
       \end{scope}\addtolength{\moirphismwip}{#2}%
     }%
   }%
   \addtolength{\moirphismh}{#2}%
-  \ifdim #3cm>\moirphismmaxw \setlength{\moirphismmaxw}{#3cm}\fi
+  \ifdim #3>\moirphismmaxw \setlength{\moirphismmaxw}{#3}\fi
 }
 
 % draws, behind everything else, the wire stubs joining a narrower box's
@@ -86,94 +90,121 @@
 
 %%%%%%%%%%%%%%%%%%% PRIMITIVES
 
+\RenewDocumentCommand{\_}{}{  \wrapmoirphism{}[1cm][1cm][0][0] }
+
+\NewDocumentCommand{\idw}{O{1cm}}{
+  \wrapmoirphism{\draw[wire]  (-#1/2,0) -- (#1/2,0);}[1cm][#1][1][1]
+}
+\def\sw{\idw[0.3cm]}
+
+\NewDocumentCommand{\wirep}{}{\wrapmoirphism{\draw[wire+] (-0.5,0) -- (+0.5,0);}[1cm][1cm][1][1] }
+\NewDocumentCommand{\wiren}{}{\wrapmoirphism{\draw[wire-] (-0.5,0) -- (+0.5,0);}[1cm][1cm][1][1] }
+
 % #1 label, #2 (unused, kept for compatibility), #3 width (default 1)
-\NewDocumentCommand{\mor}{m O{1.0}}{%
+\NewDocumentCommand{\mor}{m O{0.58cm}}{%
   \wrapmoirphism{
     \draw[wire] (-\moirphismW,0) -- (\moirphismW,0);
     \node[box] at (0,0) {$#1$};
   }[1cm][#2]}
 
-\NewDocumentCommand{\mul}{m}{%
+\NewDocumentCommand{\mul}{}{%
   \wrapmoirphism{
-    \draw[wire] (-\moirphismW/2,+0.5) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.5];
-    \draw[wire] (0,0) -- (\moirphismW/2,0);
-    \node[cdot=#1] at (0,0) {};
-  }[2cm][0.8][2][1]}
+    \draw[wire] (0,0) -- (0.5,0);
+    \draw[wire] (-0.5,-0.5) arc[start angle=-90,end angle=90,x radius=0.5,y radius=0.5];
+    \node[cdot] at (0,0) {};
+  }[2cm][1.0cm][1][2]}
 
-\NewDocumentCommand{\comul}{m}{%
+\NewDocumentCommand{\comul}{}{%
   \wrapmoirphism{
     \draw[wire] (-0.5,0) -- (0,0);
     \draw[wire] (+0.5,+0.5) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.5];
-    \node[cdot=#1] at (0,0) {};
-  }[2cm][1.0][1][2]}
+    \node[cdot] at (0,0) {};
+  }[2cm][1.0cm][1][2]}
 
-\NewDocumentCommand{\comulvar}{m}{%
+\NewDocumentCommand{\comulvar}{}{%
   \wrapmoirphism{
     \begin{scope}[xshift=-0.25cm]
     \draw[wire] (+0.5,+0.5) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.5];
-    \node[cdot=#1] at (0,0) {};
+    \node[cdot] at (0,0) {};
     \end{scope}
-  }[2cm][0.5][1][2]}
+  }[2cm][0.5cm][1][2]}
 
 \NewDocumentCommand{\swap}{}{%
   \wrapmoirphism{
     \draw[wire] (-0.5,+0.25) -- (-0.25,+0.25) -- (+0.25,-0.25) -- (+0.5,-0.25);
     \draw[wire] (-0.5,-0.25) -- (-0.25,-0.25) -- (+0.25,+0.25) -- (+0.5,+0.25);
-  }[1cm][1][2][2]}
+  }[1cm][1cm][2][2]}
 
-\NewDocumentCommand{\ccap}{}{\wrapmoirphism{\draw[wire] (-0.5,+0.5) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.5];}[2cm][1][2][0]}
-\NewDocumentCommand{\ccup}{}{\wrapmoirphism{\draw[wire] (+0.5,+0.5) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.5];}[2cm][1][0][2]}
+\NewDocumentCommand{\ccap}{}{\wrapmoirphism{\draw[wire] (-0.5,+0.5) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.5];}[2cm][1cm][2][0]}
+\NewDocumentCommand{\ccup}{}{\wrapmoirphism{\draw[wire] (+0.5,+0.5) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.5];}[2cm][1cm][0][2]}
 
-\NewDocumentCommand{\ccapp}{}{\wrapmoirphism{\draw[wire+] (-0.5,+0.5) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.5];}[2cm][1][2][0]}
-\NewDocumentCommand{\ccapn}{}{\wrapmoirphism{\draw[wire-] (-0.5,+0.5) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.5];}[2cm][1][2][0]}
+\NewDocumentCommand{\ccapp}{}{\wrapmoirphism{\draw[wire+] (-0.5,+0.5) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.5];}[2cm][1cm][2][0]}
+\NewDocumentCommand{\ccapn}{}{\wrapmoirphism{\draw[wire-] (-0.5,+0.5) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.5];}[2cm][1cm][2][0]}
 
-\NewDocumentCommand{\ccupp}{}{\wrapmoirphism{\draw[wire+] (+0.5,+0.5) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.5];}[2cm][1][0][2]}
-\NewDocumentCommand{\ccupn}{}{\wrapmoirphism{\draw[wire-] (+0.5,+0.5) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.5];}[2cm][1][0][2]}
+\NewDocumentCommand{\ccupp}{}{\wrapmoirphism{\draw[wire+] (+0.5,+0.5) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.5];}[2cm][1cm][0][2]}
+\NewDocumentCommand{\ccupn}{}{\wrapmoirphism{\draw[wire-] (+0.5,+0.5) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.5];}[2cm][1cm][0][2]}
 
 %%%%%%%%%%%%%%%%%%% DIRECTED VARIANTS
 
-\RenewDocumentCommand{\_}{}{  \wrapmoirphism{}[1cm][1][0][0] }
-\RenewDocumentCommand{\~}{}{  \wrapmoirphism{\draw[wire]  (-0.5,0) -- (+0.5,0);}[1cm][1][1][1] }
-\NewDocumentCommand{\wirep}{}{\wrapmoirphism{\draw[wire+] (-0.5,0) -- (+0.5,0);}[1cm][1][1][1] }
-\NewDocumentCommand{\wiren}{}{\wrapmoirphism{\draw[wire-] (-0.5,0) -- (+0.5,0);}[1cm][1][1][1] }
-
-\NewDocumentCommand{\mulp}{m}{
+\NewDocumentCommand{\mulp}{}{
     \wrapmoirphism{
-        \draw[wire+] (-0.5,+0.25) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.25];
-        \draw[wire+] (0,0) -- (+0.5,0);
-        \node[cdot=#1] at (0,0) {};
-    }[2cm][1][2][1]
+        \draw[wire+end] (-0.5,+0.5) arc[start angle=90,end angle=0,x radius=0.5,y radius=0.5];
+        \draw[wire+end] (0,0) arc[start angle=0,end angle=-90,x radius=0.5,y radius=0.5];
+        \draw[wire+end] (0,0) -- (+0.5,0);
+        \node[cdot] at (0,0) {};
+    }[2cm][1cm][2][1]
 }
-\NewDocumentCommand{\muln}{m}{
+\NewDocumentCommand{\muln}{}{
     \wrapmoirphism{
-        \draw[wire-] (-0.5,+0.25) arc[start angle=90,end angle=-90,x radius=0.5,y radius=0.25];
+        \draw[wire-] (-0.5,+0.5) arc[start angle=90,end angle=0,x radius=0.5,y radius=0.5];
+        \draw[wire-] (0,0) arc[start angle=0,end angle=-90,x radius=0.5,y radius=0.5];
         \draw[wire-] (0,0) -- (+0.5,0);
-        \node[cdot=#1] at (0,0) {};
-    }[2cm][1][2][1]
+        \node[cdot] at (0,0) {};
+    }[2cm][1cm][2][1]
 }
-\NewDocumentCommand{\comulp}{m}{
+\NewDocumentCommand{\comulp}{}{
     \wrapmoirphism{
         \draw[wire+] (-0.5,0) -- (0,0);
-        \draw[wire+] (+0.5,+0.25) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.25];
-        \node[cdot=#1] at (0,0) {};
-    }[2cm][1][1][2]
+        \draw[wire+] (0,0) arc[start angle=180,end angle=90,x radius=0.5,y radius=0.5];
+        \draw[wire+] (0,0) arc[start angle=180,end angle=270,x radius=0.5,y radius=0.5];
+        \node[cdot] at (0,0) {};
+    }[2cm][1cm][1][2]
 }
-\NewDocumentCommand{\comuln}{m}{
+% \NewDocumentCommand{\comulvarp}{m}{
+%     \wrapmoirphism{
+%       \begin{scope}[xshift=-#1cm/2]
+%         \draw[wire+beg] (0.5-#1,0) -- (0,0);
+%         \draw[wire+end] (0,0) arc[start angle=180,end angle=90,x radius=0.5,y radius=0.5];
+%         \draw[wire+end] (0,0) arc[start angle=180,end angle=270,x radius=0.5,y radius=0.5];
+%         \node[cdot] at (0,0) {};
+%       \end{scope}
+%     }[2cm][#1cm][1][2]
+% }
+\NewDocumentCommand{\comulvarp}{}{
+    \wrapmoirphism{
+        \draw[wire+beg] (-0.5,0) -- (0,0);
+        \draw[wire+end] (0,0) arc[start angle=180,end angle=90,x radius=0.5,y radius=0.5];
+        \draw[wire+end] (0,0) arc[start angle=180,end angle=270,x radius=0.5,y radius=0.5];
+        \node[cdot] at (0,0) {};
+    }[2cm][0.80cm][1][2]
+}
+\NewDocumentCommand{\comuln}{}{
     \wrapmoirphism{
         \draw[wire-] (-0.5,0) -- (0,0);
-        \draw[wire-] (+0.5,+0.25) arc[start angle=90,end angle=270,x radius=0.5,y radius=0.25];
-        \node[cdot=#1] at (0,0) {};
-    }[2cm][1][1][2]
+        \draw[wire-] (+0.5,+0.5) arc[start angle=90,end angle=180,x radius=0.5,y radius=0.5];
+        \draw[wire-] (0,0) arc[start angle=180,end angle=270,x radius=0.5,y radius=0.5];
+        \node[cdot] at (0,0) {};
+    }[2cm][1cm][1][2]
 }
 \NewDocumentCommand{\swapp}{}{
     \wrapmoirphism{
-	    \draw[wire+] (-0.5,+0.25) -- (-0.25,+0.25) -- (+0.25,-0.25) -- (+0.5,-0.25);
-	    \draw[wire+] (-0.5,-0.25) -- (-0.25,-0.25) -- (+0.25,+0.25) -- (+0.5,+0.25);
-    }[2cm][1][2][2]
+	    \draw[wire+end] (-0.5,+0.5) -- (-0.5,+0.5) -- (+0.5,-0.5) -- (+0.5,-0.5);
+	    \draw[wire+end] (-0.5,-0.5) -- (-0.5,-0.5) -- (+0.5,+0.5) -- (+0.5,+0.5);
+    }[2cm][1cm][2][2]
 }
 \NewDocumentCommand{\swapn}{}{
     \wrapmoirphism{
-	    \draw[wire-] (-0.5,+0.25) -- (-0.25,+0.25) -- (+0.25,-0.25) -- (+0.5,-0.25);
-	    \draw[wire-] (-0.5,-0.25) -- (-0.25,-0.25) -- (+0.25,+0.25) -- (+0.5,+0.25);
-    }[2cm][1][2][2]
+	    \draw[wire-] (-0.5,+0.5) -- (-0.5,+0.5) -- (+0.5,-0.5) -- (+0.5,-0.5);
+	    \draw[wire-] (-0.5,-0.5) -- (-0.5,-0.5) -- (+0.5,+0.5) -- (+0.5,+0.5);
+    }[2cm][1cm][2][2]
 }

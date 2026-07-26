@@ -5,47 +5,88 @@
 \begin{document}
 
 % \begin{tikzpicture}
-
-\tikzset{
-    wire/.style={rounded corners=3, line width=0.75pt}
-	, iden/.style={line width=1pt} }
-
 \tikzset{every picture/.append style={scale=0.6}}
 
-% % Draw a grid
-% \draw[xshift=0.5,step=0.25,gray!10,ultra thin]
-%     (0,0) grid (13,-11);
-% \draw[xshift=0.5,step=0.5,gray!30,ultra thin]
-%     (0,0) grid (13,-11);
-% \draw[xshift=0.5,step=1,gray!70,ultra thin]
-%     (0,0) grid (13,-11);
+\fbox{
+    \begin{tikzpicture}
+    \moirphism{
+        \mor{f}[1.0cm] \> \mor{h}[1.0cm] %\> \comul \> \mor{f} \mor{g} \> \ccapp
+    }
+    \end{tikzpicture}
+}
+Standard
 
-% \moirphism{
-%   \f \> \comul{black} \> \f \mor{g} \> \ccap %\> \comul{black} \f
+\fbox{
+    \begin{tikzpicture}
+    \moirphism{
+        \comulp
+    }
+    \end{tikzpicture}
+}
+
+\fbox{
+    \begin{tikzpicture}
+    \moirphism{
+        \mor{f} \> \comulp \> \idw[0.1cm] \idw[0.1cm] \> \mor{f} \mor{g}
+    }
+    \end{tikzpicture}
+}
+
+\fbox{
+    \begin{tikzpicture}
+    \moirphism{
+        \mor{f} \> \comulvarp \> \idw[0.1cm] \idw[0.1cm] \> \mor{f} \mor{g}
+    }
+    \end{tikzpicture}
+}
+
+\fbox{
+    \begin{tikzpicture}
+    \moirphism{ \comul \idw \> \idw \mul }
+    \end{tikzpicture}
+    =
+    \begin{tikzpicture}
+    \moirphism{ \idw \comul \> \mul \idw }
+    \end{tikzpicture}
+    =
+    \begin{tikzpicture}
+    \moirphism{ \mul \> \comul }
+    \end{tikzpicture}
+}
+\fbox{
+    \begin{tikzpicture}
+    \moirphism{\mor{f} \> \comul}
+    \end{tikzpicture}
+    $\le$
+    \begin{tikzpicture}
+    \moirphism{\comul \> \mor{f} \mor{f}}
+    \end{tikzpicture}
+}
+\fbox{
+    \begin{tikzpicture}
+    \moirphism{\sw \> \mor{f} \> \comul}
+    \end{tikzpicture}
+    $\le$
+    \begin{tikzpicture}
+    \moirphism{\comul \> \mor{f} \mor{f} \> \sw \sw}
+    \end{tikzpicture}
+}
+
+% Asd
+% \fbox{
+%     \begin{tikzpicture}
+%     \moirphism{
+%         \mor{f} \> \comulvar \> \mor{f} \mor{g} \> \ccapp
+%     }
+%     \end{tikzpicture}
 % }
-
-\fbox{
-    \begin{tikzpicture}
-    \moirphism{
-        \mor{f} \> \comul{black} \> \mor{f} \mor{g} \> \ccapp
-    }
-    \end{tikzpicture}
-}
-Asd
-\fbox{
-    \begin{tikzpicture}
-    \moirphism{
-        \mor{f} \> \comulvar{black} \> \mor{f} \mor{g} \> \ccapp
-    }
-    \end{tikzpicture}
-}
-Asd
-\fbox{
-    \begin{tikzpicture}
-    \moirphism{
-    \mor{f} \_ \> \comul{black} \_ \> \mor{f} \mor{g} \~ \> \ccapp \_ %\> \comul{black} \f
-    }
-    \end{tikzpicture}
-}
+% Asd
+% \fbox{
+%     \begin{tikzpicture}
+%     \moirphism{
+%         \mor{f} \_ \> \comul \_ \> \mor{f} \mor{g} \~ \> \ccapp \_ %\> \comul \f
+%     }
+%     \end{tikzpicture}
+% }
 
 \end{document}
